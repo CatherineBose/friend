@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/logout" >Logout</a>
+    <h1>Hello, {{user.name}} {{user.alias}}! {{user.id}}</h1>
+    <p>Here is the list of your friends </p>
+    <table border="1">
+        <thead>
+            <tr>
+                <td>Alias</td>                  
+                <td>Action</td>
+            </tr>
+        </thead>
+        {% for user in friendsList %}
+        <tr>
+            <td>{{user.alias}}</td>
+            <td><a href='user/{{user.id}}'/>View Profile</a>
+                <a href='remove/{{user.id}}'/>Remove as a friend</td>
+        </tr>
+        {% endfor %}
+     
+</body>
+</html>
