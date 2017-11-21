@@ -9,7 +9,7 @@
 <body>
     <a href="/logout" >Logout</a>
     <h1>Hello, {{user.name}} {{user.alias}}! {{user.id}}</h1>
-    <p>Here is the list of your friends </p>
+    <p>Here is the list of friends  </p>
     <table border="1">
         <thead>
             <tr>
@@ -17,13 +17,30 @@
                 <td>Action</td>
             </tr>
         </thead>
-        {% for user in friendsList %}
+        {% for user in friends %}
         <tr>
             <td>{{user.alias}}</td>
             <td><a href='user/{{user.id}}'/>View Profile</a>
                 <a href='remove/{{user.id}}'/>Remove as a friend</td>
         </tr>
         {% endfor %}
-     
+    </table>
+   
+    <p>Here is the list of others users whom you are not friends with yet </p>
+    <table border="1">
+        <thead>
+            <tr>
+                <td>Alias</td>                  
+                <td>Action</td>
+            </tr>
+        </thead>
+        {% for user in notFriends %}
+        <tr>
+            <td>{{user.alias}}</td>
+            <td><button><a href='add/{{user.id}}'/>Remove as a friend</button></a></button></button>
+                </td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>

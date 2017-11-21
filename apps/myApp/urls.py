@@ -8,7 +8,7 @@ urlpatterns = [
   url(r'^friends/$', views.wall),
   url(r'^user/(?P<id>\d+)',views.show),
   url(r'^logout$', views.logout),
-    #   {{user.id}}/remove remove/{{user.id}}
-  url(r'^remove/(?P<id>\d+)', views.logout),
+  url(r'^remove/(?P<id>\d+)', views.removeFriend),
+  url(r'^add/(?P<id>\d+)', views.addFriend),
   
 ]

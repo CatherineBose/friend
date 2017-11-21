@@ -74,25 +74,20 @@ class UserManager(models.Manager):
         # check if password has one no
         if not(any(x.isdigit() for x in passWdString)):
             errors.append("Password should have at least one digit")
-        current_date = datetime.datetime.strptime(str(datetime.date.today()),'%Y-%m-%d')
-        print "current_date",current_date
-        user_bday = datetime.datetime.strptime(postData['birthday'], '%Y-%m-%d')
-        print "user_bday", user_bday
+        #Date check
+        print "inside the Date check"
         try:
-            if user_bday > current_date:
-                    errors.append ("Enter the date that you were born not future date")
+            print "inside try" 
+            dob = datetime.datetime.strptime(postData['birthday'], '%Y-%m-%d')
+            print "dob:", dob
+            print "datetime.datetime.now():", datetime.datetime.now()
+            if dob > datetime.datetime.now():
+                print "inside if which means dob > datetime.datetime.now()"
+                print "errors.append : Birthday day shoud be valid !"
+                errors.append("Birthday day shoud be valid !")
         except:
             errors.append ("Please input a birth date")
-        # try:
-        #     # current_date = datetime.now().date()
-        #     current_date = datetime.datetime.strptime(str(datetime.date.today()),'%Y-%m-%d')
-        #     print current_date
-        #     user_bday = datetime.datetime.strptime(postData['birthday'], '%Y-%m-%d')
-        #     print user_bday
-        #     if user_bday > current_date:
-        #         errors.append ("Enter the date that you were born not future date")
-        # except:
-        #     errors.append ("Please input a birth date")
+        
         print "errors List \n", errors
         print "name=postData['name']", postData['name']
         print "alias=postData['alias']", postData['alias']
@@ -117,12 +112,65 @@ class UserManager(models.Manager):
                 return new_user
         return errors
 
+# def add_friend(self, postdata, userid):  
+#         errors = {}    
+#         friend_id = postdata['fid']  
+#         isuser = User.objects.filter(id =friend_id)    
+#         if len(isuser): 
+#             if friend_id ==  userid :
+#                 errors['friends'] = " You are not allowed to be friends with yuorself"
+#                 return (False, errors)
+#             else:
+#                 user = User.objects.get(id = userid)    
+#                 friends = user.friends.add(friend_id)         
+#                 return (True, friends )
+#         else:
+#             errors['friend'] = "You are not allowed to add this user"
+#             return (False, errors)
+
+
+# def isFriend(self, fid):
+#     errors ={}
+#     isuser = User.objects.filter(id =fid)       
+#     if len(isuser) :           
+#         return ( True, isuser)
+#     else:
+#         errors['friend'] = "You are not allowed to perform this operation"
+#         return (False, errors)
+
+#     ################# You can implement below code if you dont want to allow view profile if you are not friend
+#     # friend = user.friends.filter(id = fid)
+#     # print friend       
+#     # if len(friend):
+#     #     return (True, friend)
+#     # else:
+#     #     errors['friend'] = "You are not allowed to view this profile"
+#     #     return (False, errors)
+
+# def validate_remove(self, fid, userid):
+#     errors = {}
+#     friendExist = User.objects.filter(id = fid) 
+#     if len(friendExist):
+#         friedshipExist = friendExist[0].friends.filter(id = userid)
+#         if len(friedshipExist):
+#             user = User.objects.get(id=userid)
+#             friend = User.objects.get(id=fid)
+#             result = user.friends.remove(friend)
+#             print result
+#             return (True, result)
+#         else:
+#             errors['friend'] = "You are not allowed to remove this person"
+#             return (False, errors)
+#     else:
+#         errors['friend'] = " This operation is not allowed"
+#         return (False, errors)
+
 class User(models.Model):
     name = models.CharField(max_length=45)
     alias = models.CharField(max_length=45)
     email = models.TextField(max_length=45)
     password = models.CharField(max_length=45)
-    birthday = models.DateField()
+    birthday = models.DateTimeField(default = None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     Friendships = models.ManyToManyField('self')
@@ -136,11 +184,35 @@ user1 = User.objects.get(id =1)
 user2 = User.objects.get(id =2)
 user3 = User.objects.get(id =3)
 user4 = User.objects.get(id =4)
-User.objects.get(id=1).Friendships.add(User.objects.get(id=2))
+
 User.objects.get(id=1).Friendships.add(User.objects.get(id=2))
 User.objects.get(id=1).Friendships.add(User.objects.get(id=3))
 User.objects.get(id=2).Friendships.add(User.objects.get(id=3))
 User.objects.get(id=2).Friendships.add(User.objects.get(id=4))
 User.objects.get(id=2).Friendships.all()
+
+user = User.objects.get(id=request.session['user_id'])
+    allOtherUsers = User.objects.all().exclude(id=request.session['user_id'])
+    friends = user.Friendships.all()
+    usersnotFriended = allOtherUsers.exclude(friends) 
+
+myself = User.objects.get(id=1)
+friends = myself.Friendships.all()
+allOtherUsers=User.objects.exclude(id=1)
+allOtherUsers.exclude.(friends)
+--------
+user1 = User.objects.get(id =1)
+user2 = User.objects.get(id =2)
+user3 = User.objects.get(id =3)
+user4 = User.objects.get(id =4)
+user1.Friendships.add(user3)
+user1.Friendships.add(user4)
+user1.Friendships.all()
+
+allOtherUsers = User.objects.exclude(user1) ------> will error out as user1 is an entire object
+use this instead
+allOtherUsers = User.objects.exclude(id=1)
+allOtherUsers.exclude(Friendships=1))
+
 
 '''

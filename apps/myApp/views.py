@@ -33,12 +33,7 @@ def register(request):
     print "result.id",result.id
     request.session['user_id'] = result.id
     messages.success(request, "Successfully registered!")
-    usersFriends = User.objects.get(result.id).Friendships.all()
-    print usersFriends
-    context = {
-        friendsList: usersFriends
-    }
-    return redirect('/friends', context)
+    return redirect('/friends')
 
 def login(request):
     result = User.objects.login_validator(request.POST)
@@ -49,24 +44,27 @@ def login(request):
     request.session['user_id'] = result.id
     print "Successfully logged in!"
     messages.success(request, "Successfully logged in!")
-    usersFriends = User.objects.get(result.id).Friendships.all()
-    print usersFriends
-    context = {
-        friendsList: usersFriends
-    }
-    return redirect('/friends', context)
-    # return redirect('/friends')
+    return redirect('/friends')
+    
 
 def wall(request):
     try:
         request.session['user_id']
     except KeyError:
         return redirect ('/')
-    # request.session['count'] += 1
-    context ={
-        'user': User.objects.get(id=request.session['user_id'])
-    }
+    user = User.objects.get(id=request.session['user_id'])
+    friends = user.Friendships.all()
+    # friends = User.objects.filter(Friendships = req.session['id'])
+    allOtherUsers = User.objects.exclude(id=request.session['user_id'])
+    notFriends = allOtherUsers.exclude(Friendships=request.session['user_id'])
+
+    context = {
+	 	'user': user,
+		'friends' : friends,
+	 	'notFriends': notFriends,
+	}
     return render(request,'myApp/friends.html', context)
+
 
 def show(request, id):
     try:
@@ -86,3 +84,17 @@ def logout(request):
     # return HttpResponse("You're logged out.")
     return redirect ('/')
 
+def removeFriend(request,id):
+    try:
+        request.session['user_id']
+    except KeyError:
+        return redirect ('/')
+    return redirect('/friends')
+
+def addFriend(request,id):
+    try:
+        request.session['user_id']
+    except KeyError:
+        return redirect ('/')
+    
+    return redirect('/friends')
