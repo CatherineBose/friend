@@ -19,9 +19,9 @@
         </thead>
         {% for user in friends %}
         <tr>
-            <td>{{user.alias}}</td>
-            <td><a href='user/{{user.id}}'/>View Profile</a>
-                <a href='remove/{{user.id}}'/>Remove as a friend</td>
+            <td>{{user.alias}} {{user.id}} /user/{{user.id}} /remove/{{user.id}}  </td>
+            <td><a href='/user/{{user.id}}'/>View Profile</a>
+                <a href='/remove/{{user.id}}'/>Remove as a friend</td>
         </tr>
         {% endfor %}
     </table>
@@ -36,8 +36,8 @@
         </thead>
         {% for user in notFriends %}
         <tr>
-            <td>{{user.alias}}</td>
-            <td><button><a href='add/{{user.id}}'/>Remove as a friend</button></a></button></button>
+            <td><a href="/user/{{user.id}}">{{user.alias}}</a></td>
+            <td><button><a href='/add/{{user.id}}'/>Add as a friend</button></a></button></button>
                 </td>
         </tr>
         {% endfor %}

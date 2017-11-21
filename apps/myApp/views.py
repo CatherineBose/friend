@@ -71,10 +71,16 @@ def show(request, id):
         request.session['user_id']
     except KeyError:
         return redirect ('/')
+    print "request.session['user_id']", request.session['user_id']
+    print "id called : ", id
+    user = User.objects.get(id=id)
+    print user.name
+    print user.email
+    print user.alias
     context ={
-        'user': User.objects.get(id=request.session['user_id'])
+        'user': user
     }
-    return render(request,'myApp/show.html')
+    return render(request,'myApp/show.html', context)
 
 def logout(request):
     try:
@@ -89,6 +95,7 @@ def removeFriend(request,id):
         request.session['user_id']
     except KeyError:
         return redirect ('/')
+
     return redirect('/friends')
 
 def addFriend(request,id):
@@ -96,5 +103,14 @@ def addFriend(request,id):
         request.session['user_id']
     except KeyError:
         return redirect ('/')
-    
-    return redirect('/friends')
+    id =id
+    self = request.session['user_id']
+    errors =[]
+    if (id == self):
+        errors.append("Can't friend yourself")
+        for err in errors:
+            messages.error(request, err)
+        return redirect('/')
+    else:
+        User.objects.get(id=self).Friendships.add(User.objects.get(id=id))    
+        return redirect('/friends')
