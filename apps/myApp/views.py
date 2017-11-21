@@ -95,8 +95,19 @@ def removeFriend(request,id):
         request.session['user_id']
     except KeyError:
         return redirect ('/')
+    id =id
+    self = request.session['user_id']
+    errors =[]
+    if (id == self):
+        errors.append("Can't delete yourself")
+        for err in errors:
+            messages.error(request, err)
+        return redirect('/')
+    else:
+        User.objects.get(id=self).Friendships.remove(User.objects.get(id=id))    
+        return redirect('/friends')
 
-    return redirect('/friends')
+
 
 def addFriend(request,id):
     try:
