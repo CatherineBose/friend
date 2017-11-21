@@ -8,7 +8,7 @@
 </head>
 <body>
     <a href="/logout" >Logout</a>
-    <h1>Hello, {{user.name}} {{user.alias}}! {{user.id}}</h1>
+    <h1>Hello, {{user.name}} aka {{user.alias}}!</h1>
     <p>Here is the list of friends  </p>
     <table border="1">
         <thead>
@@ -19,7 +19,7 @@
         </thead>
         {% for user in friends %}
         <tr>
-            <td>{{user.alias}}td>
+            <td>{{user.alias}}</td>
             <td><a href='/user/{{user.id}}'/>View Profile</a>
                 <a href='/remove/{{user.id}}'/>Remove as a friend</td>
         </tr>
